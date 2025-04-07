@@ -3,15 +3,17 @@ import java.util.ArrayList;
 public class Departamento {
     private String nombre;
     private static ArrayList<Asignatura> asignaturas = null;
+    private static ArrayList<Estudiante> estudiantes = null;
     private static Departamento instancia = null;
     //Constructora sin parámetros
     public Departamento() {
 
     }
     //Constructora con parámetros
-    public Departamento(String nombre, ArrayList<Asignatura> asignaturas){
+    public Departamento(String nombre, ArrayList<Asignatura> asignaturas, ArrayList<Estudiante> estudiantes){
         this.nombre = null;
         this.asignaturas = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
     }
     //Getters and Setters
     public String getNombre() {
@@ -25,6 +27,16 @@ public class Departamento {
             asignaturas = new ArrayList<>();
         }
         return asignaturas;
+    }
+    public static ArrayList<Estudiante> getEstudiantes() {
+        if(estudiantes == null){
+            estudiantes = new ArrayList<>();
+        }
+        return estudiantes;
+    }
+
+    public static void setEstudiantes(ArrayList<Estudiante> estudiantes) {
+        Departamento.estudiantes = estudiantes;
     }
     //Método singleton (crear una única instancia)
     public static Departamento singleton() {
@@ -72,5 +84,10 @@ public class Departamento {
             }
         }
         return false;
+    }
+    public boolean agregarEstudiantes(String nombre, String doc, String tipo_doc){
+        Estudiante student = new Estudiante(nombre, doc, tipo_doc);
+        estudiantes.add(student);
+        return true;
     }
 }

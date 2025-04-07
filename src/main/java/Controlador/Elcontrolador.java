@@ -33,6 +33,11 @@ public class Elcontrolador {
     }
     //DELETE
     //No tiene mucho sentido eliminar el departamento
+    //Agregar estudiantes
+    public boolean agregarEstudiantesDpto(String nombre, String doc, String tipo_doc){
+        departamento.agregarEstudiantes(nombre,doc,tipo_doc);
+        return true;
+    }
 
     //CRUD para Asignatura
     //CREATE
