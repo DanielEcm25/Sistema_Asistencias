@@ -13,7 +13,7 @@ public class Main {
         Elcontrolador controlVar = new Elcontrolador();
         String opcion = "";
         String nombre = "";
-        while(opcion.equals("12")==false){
+        while(opcion.equals("15")==false){
             System.out.println("\nMenú principal");
             System.out.println("1. Crear departamento");
             System.out.println("2. Consultar departamento");
@@ -163,26 +163,32 @@ public class Main {
                     if (controlVar.consultarAsignatura(codigo, grupo, semestre) == null) {
                         System.out.println("La asignatura no existe");
                     }else{
+                        System.out.println("Asignatura: "+controlVar.consultarAsignatura(codigo, grupo, semestre).getNombre());
                         boolean agregarmas = true;
                         while (agregarmas) {
                             System.out.println("Ingrese el código del estudiante: ");
                             String codigoEst = entrada.nextLine();
                             System.out.println("Ingrese el tipo de documento (TI ó CC)");
                             String tipodoc = entrada.nextLine();
+                            boolean isencontrado = false;
                             for (int add = 0; add < controlVar.getDepartamento().getEstudiantes().size(); add++) {
                                 String id = controlVar.getDepartamento().getEstudiantes().get(add).getIdentificacion();
                                 String tipo = controlVar.getDepartamento().getEstudiantes().get(add).getTipo_doc();
-                                if (id.equalsIgnoreCase(codigoEst) && tipo.equalsIgnoreCase(tipodoc)) {
+                                if (codigoEst.equalsIgnoreCase(id) && tipodoc.equalsIgnoreCase(tipo) == true) {
                                     String nombStu = controlVar.getDepartamento().getEstudiantes().get(add).getNombre_Apellido();
                                     controlVar.AdicionarEstudiantes(codigo, grupo, semestre, codigoEst, nombStu, tipodoc);
-                                } else {
-                                    System.out.println("El estudiante que se intenta registrar no está registrado en el departamento");
+                                    isencontrado = true;
+                                    System.out.println("Estudiante agregado");
+                                    break;
                                 }
-                                System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
-                                String more = entrada.nextLine();
-                                if (more.equalsIgnoreCase("N")) {
-                                    agregarmas = false;
-                                }
+                            }
+                            if(!isencontrado) {
+                                System.out.println("El estudiante que se intenta registrar no está registrado en el departamento");
+                            }
+                            System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
+                            String more = entrada.nextLine();
+                            if (more.equalsIgnoreCase("N")) {
+                                agregarmas = false;
                             }
                             System.out.println("Proceso finalizado");
                         }
@@ -198,7 +204,35 @@ public class Main {
                 if(controlVar.getDepartamento().getNombre()==null) {
                     System.out.println("Aun no se ha creado el departamento");
                 }else{
-                    System.out.println("");
+                    System.out.println("Ingrese la información de la asignatura:");
+                    System.out.println("Código: ");
+                    String coddel = entrada.nextLine();
+                    System.out.println("Grupo: ");
+                    String grupdel = entrada.nextLine();
+                    System.out.println("Semestre: ");
+                    String semdel = entrada.nextLine();
+                    if (controlVar.consultarAsignatura(coddel, grupdel, semdel) == null) {
+                        System.out.println("La asignatura no existe");
+                    } else {
+                        System.out.println("Asignatura "+controlVar.consultarAsignatura(coddel, grupdel, semdel).getNombre());
+                        if(controlVar.consultarAsignatura(coddel, grupdel, semdel).getEstudiantes().isEmpty()){
+                            System.out.println("Aún no hay estudiantes registrados");
+                        }else{
+                            System.out.println("Ingrese la información del estudiante: ");
+                            System.out.println("Documento: ");
+                            String docudel = entrada.nextLine();
+                            System.out.println("Tipo de documento (TI ó CC): ");
+                            String tipodel = entrada.nextLine();
+                            for(int del = 0; del<controlVar.consultarAsignatura(coddel, grupdel, semdel).getEstudiantes().size();del++){
+                                if(controlVar.consultarAsignatura(coddel,grupdel,semdel).getEstudiantes().get(del).getIdentificacion().equalsIgnoreCase(docudel) && controlVar.consultarAsignatura(coddel,grupdel,semdel).getEstudiantes().get(del).getTipo_doc().equalsIgnoreCase(tipodel)){
+                                    System.out.println("Estudiante "+controlVar.consultarAsignatura(coddel,grupdel,semdel).getEstudiantes().get(del).getNombre_Apellido()+" eliminado");
+                                    controlVar.consultarAsignatura(coddel,grupdel,semdel).getEstudiantes().remove(del);
+                                    break;
+                                }
+                            }
+                            System.out.println("El estudiante no se encontró");
+                        }
+                    }
                 }
             }else if(opcion.equals("12")){
                 if (controlVar.getDepartamento().getNombre() == null) {
@@ -227,8 +261,12 @@ public class Main {
                             ArrayList<String> codigos = new ArrayList<>();
                             ArrayList<String> estados = new ArrayList<>();
                             for (int stu = 0; stu < controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().size(); stu++) {
-                                codigos.add(controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().get(stu).getIdentificacion());
-                                estados.add("No asistió");
+                                if (controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().isEmpty()) {
+                                    System.out.println("No hay estudiantes en esta asignatura aún");
+                                }else{
+                                    codigos.add(controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().get(stu).getIdentificacion());
+                                    estados.add("No asistió");
+                                }
                             }
                             controlVar.adicionarAsistencia(codigoAs, grupoAs, semestreAs, fecha, horaInicio, horaFinal, codigos, estados);
                             System.out.println("Lista de asistencia generada");

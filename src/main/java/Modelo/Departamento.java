@@ -54,6 +54,9 @@ public class Departamento {
 
     //READ
     public Asignatura consultarAsignatura(String codigo, String grupo, String semestre) {
+        if(asignaturas==null){
+            return null;
+        }
         for (int vc = 0; vc < asignaturas.size(); vc++) {
             Asignatura copia = asignaturas.get(vc);
             if (copia.getCodigo().equalsIgnoreCase(codigo) && copia.getGrupo().equalsIgnoreCase(grupo) && copia.getSemestre().equalsIgnoreCase(semestre) == true) {
@@ -87,7 +90,6 @@ public class Departamento {
     }
     public boolean agregarEstudiantes(String nombre, String doc, String tipo_doc){
         Estudiante student = new Estudiante(nombre, doc, tipo_doc);
-        estudiantes.add(student);
-        return true;
+        return getEstudiantes().add(student);
     }
 }
