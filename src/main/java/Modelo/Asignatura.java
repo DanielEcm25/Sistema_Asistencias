@@ -8,6 +8,8 @@ public class Asignatura {
     private int creditos = 0;
     private ArrayList<Asistencia> asistencias = new ArrayList<Asistencia>();
     private ArrayList<Estudiante> estudiantes = new ArrayList<>();
+    private ArrayList<String> codigos = new ArrayList<>();
+    private ArrayList<String> tipos = new ArrayList<>();
     //Constructora con parámetros
     public Asignatura(String codigo, String grupo, String semestre, String nombre, int creditos){
         this.codigo = codigo;
@@ -63,6 +65,18 @@ public class Asignatura {
         }
         return estudiantes;
     }
+    public ArrayList<String> getCodigos(){
+        if(codigos == null){
+            return new ArrayList<>();
+        }
+        return codigos;
+    }
+    public ArrayList<String>getTipos(){
+        if(tipos == null){
+            return new ArrayList<>();
+        }
+        return tipos;
+    }
     //Método para mostrar toda la información de la asignatura
     @Override
     public String toString(){
@@ -72,6 +86,16 @@ public class Asignatura {
     public boolean AgregarEstudiantes(String codigoEst, String name, String tipodoc){
         Estudiante student = new Estudiante(name, codigoEst, tipodoc);
         estudiantes.add(student);
+        return true;
+    }
+    public boolean agregarCodigos(String codigoEst){
+        String codigo = codigoEst;
+        codigos.add(codigo);
+        return true;
+    }
+    public boolean agregarTipos(String tipoEst){
+        String codigo = tipoEst;
+        codigos.add(tipoEst);
         return true;
     }
     //CRUD de asistencias

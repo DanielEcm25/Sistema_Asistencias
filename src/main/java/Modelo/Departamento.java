@@ -10,8 +10,8 @@ public class Departamento {
 
     }
     //Constructora con parámetros
-    public Departamento(String nombre, ArrayList<Asignatura> asignaturas, ArrayList<Estudiante> estudiantes){
-        this.nombre = null;
+    public Departamento(ArrayList<Asignatura> asignaturas, ArrayList<Estudiante> estudiantes){
+        this.nombre = "Ingeniería de sistemas y computación";
         this.asignaturas = new ArrayList<>();
         this.estudiantes = new ArrayList<>();
     }
