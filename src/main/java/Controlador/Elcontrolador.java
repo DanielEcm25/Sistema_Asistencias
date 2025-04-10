@@ -11,7 +11,6 @@ public class Elcontrolador {
     //Constructora sin parámetro
     public Elcontrolador() {
         this.departamento = Departamento.singleton();
-        this.departamento.setNombre("Ingeniería de sistemas y computación");
     }
 
     //GETTERS and SETTERS del departamento
@@ -61,20 +60,27 @@ public class Elcontrolador {
         return true;
     }
 
-    //DELETE
+    //DELETE (Se optó por quitar esta opción del menú final en el Main)
     public boolean eliminarAsignatura(String codigo, String grupo, String semestre) {
         departamento.eliminarAsignatura(codigo, grupo, semestre);
         return true;
     }
 
+    //Adicionar estudiantes a una asignatura
     public boolean AdicionarEstudiantesAsign(String codigo, String grupo, String semestre, String codigoEst, String name, String tipodoc) {
         departamento.consultarAsignatura(codigo, grupo, semestre).AgregarEstudiantes(codigoEst, name, tipodoc);
         return true;
     }
+    //Obtener la lista de estudiantes de una asignatura (se creó este método dados los usos que se le daban en el Main)
+    public ArrayList<Estudiante> ConsultarEstudiantesAsign(String codigo, String grupo, String semestre){
+        return departamento.consultarAsignatura(codigo, grupo, semestre).getEstudiantes();
+    }
+    //Llenar la lista de códigos de asignatura
     public boolean AdicionarCodigosEst(String codigo, String grupo, String semestre, String codigoEst) {
         departamento.consultarAsignatura(codigo, grupo, semestre).agregarCodigos(codigoEst);
         return true;
     }
+    //Llenar la lista tipos de códigos de asignatura
     public boolean AdicionarTiposEst(String codigo, String grupo, String semestre, String tipoEst) {
         departamento.consultarAsignatura(codigo, grupo, semestre).agregarTipos(tipoEst);
         return true;

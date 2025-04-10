@@ -1,16 +1,9 @@
 package Vista;
 import Controlador.Elcontrolador;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
-        /*Cree un programa que maneje la asistencia en cualquier curso de ing de sistemas y computación. El manejo de
-        las asistencias que un curso puede tener
-        más de un horario
-        más de un grupo y tres estados en la asistencia (llego a la hora correcta, a la hora correcta
-        y no llego*/
         Scanner entrada = new Scanner(System.in);
         Elcontrolador controlVar = new Elcontrolador();
         String opcion = "";
@@ -34,27 +27,44 @@ public class Main {
             System.out.print("Seleccione una opción: ");
             opcion = entrada.nextLine();
             if (opcion.equals("1")){ //Consultar departamento
+                    controlVar.getDepartamento().setNombre("Ingeniería de sistemas y computación");
                     System.out.println("Nombre del departamento: "+controlVar.consultarNombreDepartamento());
             }else if(opcion.equals("2")) { //Modificar nombre del departamento
                     System.out.println("Ingrese el nuevo nombre del departamento");
-                    String nombre = entrada.nextLine();
-                    controlVar.modificarDepartamento(nombre);
+                    String nuevoNombreDepartamento = entrada.nextLine();
+                    controlVar.modificarDepartamento(nuevoNombreDepartamento);
                     System.out.println("El nombre del departamento se modificó");
             }else if(opcion.equals("3")) { //Registrar estudiantes en el departamento
-                boolean agregarmas = true;
-                while (agregarmas) {
+                boolean agregarEstudiantes = true;
+                while (agregarEstudiantes) {
                     System.out.println("Ingrese el código del estudiante: ");
                     String codigoEst = entrada.nextLine();
-                    System.out.println("Ingrese el nombre el estudiante: ");
-                    String name = entrada.nextLine();
-                    System.out.println("Ingrese el tipo de documento (TI ó CC)");
-                    String tipodoc = entrada.nextLine().toUpperCase();
-                    controlVar.agregarEstudiantesDpto(name, codigoEst, tipodoc);
-                    System.out.println("Estudiante registrado");
-                    System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
-                    String more = entrada.nextLine();
-                    if (more.equalsIgnoreCase("N")) {
-                        agregarmas = false;
+                    if (!codigoEst.matches("\\d+")) {
+                        System.out.println("El código ingresado no es válido");
+                    } else {
+                        boolean isregistrado = false;
+                        for (int i = 0; i < controlVar.getDepartamento().getEstudiantes().size(); i++) {
+                            String codigoRegistrado = controlVar.getDepartamento().getEstudiantes().get(i).getIdentificacion();
+                            if (codigoRegistrado.equalsIgnoreCase(codigoEst)) {
+                                isregistrado = true;
+                                break;
+                            }
+                        }
+                        if (isregistrado) {
+                            System.out.println("Ya hay un estudiante registrado con ese código");
+                        } else {
+                            System.out.println("Ingrese el nombre el estudiante: ");
+                            String nombreEstudiante = entrada.nextLine();
+                            System.out.println("Ingrese el tipo de documento (TI ó CC)");
+                            String tipodocEstudiante = entrada.nextLine().toUpperCase().substring(0, 2);
+                            controlVar.agregarEstudiantesDpto(nombreEstudiante, codigoEst, tipodocEstudiante);
+                            System.out.println("Estudiante registrado");
+                            }
+                        System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
+                        String opcionAgregar = entrada.nextLine();
+                        if (opcionAgregar.equalsIgnoreCase("N")) {
+                            agregarEstudiantes = false;
+                        }
                     }
                 }
                 System.out.println("Proceso finalizado");
@@ -63,17 +73,17 @@ public class Main {
                     System.out.println("Aún no hay estudiantes inscritos en el departamento");
                 }else {
                     System.out.println("Ingrese el tipo de documento del estudiante: ");
-                    String tipSearch = entrada.nextLine().toUpperCase();
+                    String tipoSearch = entrada.nextLine().toUpperCase().substring(0,2);
                     System.out.println("Ingrese el documento del estudiante: ");
-                    String docSearch = entrada.nextLine();
+                    String docuSearch = entrada.nextLine();
                     boolean isencontrado = false;
                     for (int search = 0; search < controlVar.getDepartamento().getEstudiantes().size(); search++) {
-                        String id = controlVar.getDepartamento().getEstudiantes().get(search).getIdentificacion();
-                        String tipo = controlVar.getDepartamento().getEstudiantes().get(search).getTipo_doc();
-                        if (docSearch.equalsIgnoreCase(id) && tipSearch.equalsIgnoreCase(tipo) == true) {
+                        String docuOriginal = controlVar.getDepartamento().getEstudiantes().get(search).getIdentificacion();
+                        String tipOriginal = controlVar.getDepartamento().getEstudiantes().get(search).getTipo_doc();
+                        if (docuSearch.equalsIgnoreCase(docuOriginal) && tipoSearch.equalsIgnoreCase(tipOriginal) == true) {
                             String nombStu = controlVar.getDepartamento().getEstudiantes().get(search).getNombre_Apellido();
                             System.out.println("Información del estudiante: ");
-                            System.out.println("Código " + id + "(" + tipo + ")");
+                            System.out.println("Código " + docuOriginal + "(" + tipOriginal + ")");
                             System.out.println("Nombre: " + nombStu);
                             isencontrado = true;
                         }
@@ -89,29 +99,29 @@ public class Main {
                 }else {
                     boolean isencontrado = false;
                     System.out.println("Ingrese el tipo de documento del estudiante: ");
-                    String tipSearch = entrada.nextLine().toUpperCase();
+                    String tipSearchEst = entrada.nextLine().toUpperCase();
                     System.out.println("Ingrese el documento del estudiante: ");
-                    String docSearch = entrada.nextLine();
+                    String docSearchEst = entrada.nextLine();
                     for (int search = 0; search < controlVar.getDepartamento().getEstudiantes().size(); search++) {
-                        String id = controlVar.getDepartamento().getEstudiantes().get(search).getIdentificacion();
-                        String tipo = controlVar.getDepartamento().getEstudiantes().get(search).getTipo_doc();
-                        if (docSearch.equalsIgnoreCase(id) && tipSearch.equalsIgnoreCase(tipo) == true) {
+                        String docuOriginal = controlVar.getDepartamento().getEstudiantes().get(search).getIdentificacion();
+                        String tipOriginal = controlVar.getDepartamento().getEstudiantes().get(search).getTipo_doc();
+                        if (docSearchEst.equalsIgnoreCase(docuOriginal) && tipSearchEst.equalsIgnoreCase(tipOriginal) == true) {
                             System.out.println("Estudiante encontrado");
                             isencontrado = true;
-                            System.out.println("Por favor indique qué desea modificar (Nombre (N) o tipo de documento (T))");
+                            System.out.println("Por favor indique qué desea modificar (Nombre (N) o tipOriginal de documento (T))");
                             String eleccion = entrada.nextLine();
                             while (true) {
                                 if(eleccion.equalsIgnoreCase("N")){
                                     System.out.println("Ingrese el nuevo nombre del estudiante: ");
-                                    String newName = entrada.nextLine();
-                                    controlVar.getDepartamento().getEstudiantes().get(search).setNombre_Apellido(newName);
+                                    String nuevoNombre = entrada.nextLine();
+                                    controlVar.getDepartamento().getEstudiantes().get(search).setNombre_Apellido(nuevoNombre);
                                     System.out.println("El nombre se cambió exitosamente");
                                     break;
                                 }else if(eleccion.equalsIgnoreCase("T")){
-                                    System.out.println("Ingrese el nuevo tipo de documento del estudiante (TI ó CC): ");
-                                    String newTipo = entrada.nextLine();
-                                    controlVar.getDepartamento().getEstudiantes().get(search).setTipo_doc(newTipo);
-                                    System.out.println("El tipo de documento se cambió exitosamente");
+                                    System.out.println("Ingrese el nuevo tipOriginal de documento del estudiante (TI ó CC): ");
+                                    String nuevoTipo= entrada.nextLine().toUpperCase().substring(0,2);
+                                    controlVar.getDepartamento().getEstudiantes().get(search).setTipo_doc(nuevoTipo);
+                                    System.out.println("El tipOriginal de documento se cambió exitosamente");
                                     break;
                                 }
                             }
@@ -124,18 +134,30 @@ public class Main {
                 System.out.println("Proceso finalizado");
             }else if(opcion.equals("6")) { //Adicionar Asignatura
                 System.out.println("Digite la información de la asignatura.");
-                System.out.print("Nombre: ");
-                String name = entrada.nextLine();
-                System.out.print("Créditos: ");
-                String creditos = entrada.nextLine();
                 System.out.print("Código: ");
-                String codigo = entrada.nextLine();
-                System.out.print("Grupo: ");
-                String grupo = entrada.nextLine();
-                System.out.print("Semestre: ");
-                String semestre = entrada.nextLine();
-                controlVar.agregarAsignatura(name, creditos, codigo, grupo, semestre);
-                System.out.println("Asignatura agregada con éxito");
+                String codigoAsign = entrada.nextLine();
+                boolean yaexisteAsign = false;
+                for(int i = 0; i<controlVar.getDepartamento().getAsignaturas().size(); i++){
+                    String codigoComparar = controlVar.getDepartamento().getAsignaturas().get(i).getCodigo();
+                    if(codigoComparar.equalsIgnoreCase(codigoAsign)){
+                        yaexisteAsign = true;
+                        break;
+                    }
+                }
+                if(yaexisteAsign){
+                    System.out.println("Ya existe una asignatura con ese código");
+                }else{
+                    System.out.print("Nombre: ");
+                    String nombreAsign = entrada.nextLine();
+                    System.out.print("Créditos: ");
+                    String creditosAsign = entrada.nextLine();
+                    System.out.print("Grupo: ");
+                    String grupoAsign = entrada.nextLine();
+                    System.out.print("Semestre: ");
+                    String semestreAsign = entrada.nextLine();
+                    controlVar.agregarAsignatura(nombreAsign, creditosAsign, codigoAsign, grupoAsign, semestreAsign);
+                    System.out.println("Asignatura agregada con éxito");
+                }
             }else if(opcion.equals("7")){ //Consultar Asignatura
                 if(controlVar.getDepartamento().getAsignaturas().isEmpty()) {
                     System.out.println("Aun no se ha registrado una asignatura");
@@ -159,20 +181,20 @@ public class Main {
                 }else{
                     System.out.println("Info de la asignatura a modificar");
                     System.out.print("Código: ");
-                    String codModi = entrada.nextLine();
+                    String codModif = entrada.nextLine();
                     System.out.print("Grupo: ");
-                    String grupoModi = entrada.nextLine();
+                    String grupoModif = entrada.nextLine();
                     System.out.print("Semestre: ");
-                    String semModi = entrada.nextLine();
-                    if(controlVar.consultarAsignatura(codModi,grupoModi,semModi)==null){
+                    String semModif = entrada.nextLine();
+                    if(controlVar.consultarAsignatura(codModif,grupoModif, semModif)==null){
                         System.out.println("No se encontró la asignatura");
                     }else{
                         System.out.println("Solo puede modificar el nombre y los créditos");
-                        System.out.print("Nuevo Nombre: ");
+                        System.out.print("Nuevo nombre: ");
                         String nuevoNombre = entrada.nextLine();
-                        System.out.print("Nuevos Créditos: ");
+                        System.out.print("Nuevos créditos: ");
                         String nuevosCreditos = entrada.nextLine();
-                        controlVar.modificarAsignatura(codModi, grupoModi, semModi, nuevoNombre, nuevosCreditos);
+                        controlVar.modificarAsignatura(codModif, grupoModif, semModif, nuevoNombre, nuevosCreditos);
                         System.out.println("La asignatura se modificó con éxito");
                     }
                 }
@@ -181,43 +203,59 @@ public class Main {
                     System.out.println("Aun no se ha registrado una asignatura");
                 }else {
                     System.out.println("Ingrese el código de la asignatura:");
-                    String codigo = entrada.nextLine();
+                    String codigoAsign = entrada.nextLine();
                     System.out.println("Ingrese el grupo de la asignatura: ");
-                    String grupo = entrada.nextLine();
+                    String grupoAsign = entrada.nextLine();
                     System.out.println("Ingrese el semestre de la asignatura: ");
-                    String semestre = entrada.nextLine();
-                    if (controlVar.consultarAsignatura(codigo, grupo, semestre) == null) {
+                    String semestreAsign = entrada.nextLine();
+                    if (controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign) == null) {
                         System.out.println("La asignatura no existe");
-                    }else{
-                        System.out.println("Asignatura: "+controlVar.consultarAsignatura(codigo, grupo, semestre).getNombre());
+                    }else {
+                        System.out.println("Asignatura: " + controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getNombre());
                         boolean agregarmas = true;
                         while (agregarmas) {
                             System.out.println("Ingrese el código del estudiante: ");
                             String codigoEst = entrada.nextLine();
-                            System.out.println("Ingrese el tipo de documento (TI ó CC)");
-                            String tipodoc = entrada.nextLine().toUpperCase();
-                            boolean isencontrado = false;
-                            for (int add = 0; add < controlVar.getDepartamento().getEstudiantes().size(); add++) {
-                                String id = controlVar.getDepartamento().getEstudiantes().get(add).getIdentificacion();
-                                String tipo = controlVar.getDepartamento().getEstudiantes().get(add).getTipo_doc();
-                                if (codigoEst.equalsIgnoreCase(id) && tipodoc.equalsIgnoreCase(tipo) == true) {
-                                    String nombStu = controlVar.getDepartamento().getEstudiantes().get(add).getNombre_Apellido();
-                                    controlVar.AdicionarEstudiantesAsign(codigo, grupo, semestre, codigoEst, nombStu, tipodoc);
-                                    controlVar.AdicionarCodigosEst(codigo,grupo,semestre,codigoEst);
-                                    controlVar.AdicionarTiposEst(codigo,grupo,semestre,tipodoc);
-                                    isencontrado = true;
-                                    System.out.println("Estudiante agregado");
-                                    break;
+                            if (!codigoEst.matches("\\d+")) {
+                                System.out.println("El código registrado no es válido");
+                            } else {
+                                boolean isregistrado = false;
+                                for (int i = 0; i < controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).size(); i++) {
+                                    String codigoRegistrado = controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).get(i).getIdentificacion();
+                                    if (codigoRegistrado.equalsIgnoreCase(codigoEst)) {
+                                        isregistrado = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if(!isencontrado) {
-                                System.out.println("El estudiante que se intenta registrar no está registrado en el departamento");
-                            }
-                            System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
-                            String more = entrada.nextLine();
-                            if (more.equalsIgnoreCase("N")) {
-                                agregarmas = false;
-                                System.out.println("Proceso finalizado");
+                                if (isregistrado) {
+                                    System.out.println("Ya hay un estudiante registrado con ese código");
+                                } else {
+                                    System.out.println("Ingrese el tipo de documento (TI ó CC)");
+                                    String tipodoc = entrada.nextLine().toUpperCase().substring(0, 2);
+                                    boolean isencontrado = false;
+                                    for (int add = 0; add < controlVar.getDepartamento().getEstudiantes().size(); add++) {
+                                        String id = controlVar.getDepartamento().getEstudiantes().get(add).getIdentificacion();
+                                        String tipo = controlVar.getDepartamento().getEstudiantes().get(add).getTipo_doc();
+                                        if (codigoEst.equalsIgnoreCase(id) && tipodoc.equalsIgnoreCase(tipo) == true) {
+                                            String nombStu = controlVar.getDepartamento().getEstudiantes().get(add).getNombre_Apellido();
+                                            controlVar.AdicionarEstudiantesAsign(codigoAsign, grupoAsign, semestreAsign, codigoEst, nombStu, tipodoc);
+                                            controlVar.AdicionarCodigosEst(codigoAsign, grupoAsign, semestreAsign, codigoEst);
+                                            controlVar.AdicionarTiposEst(codigoAsign, grupoAsign, semestreAsign, tipodoc);
+                                            isencontrado = true;
+                                            System.out.println("Estudiante agregado");
+                                            break;
+                                        }
+                                    }
+                                    if (!isencontrado) {
+                                        System.out.println("El estudiante que se intenta registrar no está registrado en el departamento");
+                                    }
+                                    System.out.println("¿Desea seguir agregando estudiantes (S/N)?");
+                                    String more = entrada.nextLine();
+                                    if (more.equalsIgnoreCase("N")) {
+                                        agregarmas = false;
+                                        System.out.println("Proceso finalizado");
+                                    }
+                                }
                             }
                         }
                     }
@@ -242,7 +280,7 @@ public class Main {
                         if(controlVar.consultarAsignatura(codeSearch,grupoSearch,semestreSearch).getEstudiantes().isEmpty()){
                             System.out.println("Aun no se han registrado estudiantes");
                         }else{
-                            for(int info = 0; info<controlVar.consultarAsignatura(codeSearch,grupoSearch,semestreSearch).getEstudiantes().size(); info++){
+                            for(int info = 0; info<controlVar.ConsultarEstudiantesAsign(codeSearch,grupoSearch,semestreSearch).size(); info++){
                                 String codigo = controlVar.consultarAsignatura(codeSearch,grupoSearch,semestreSearch).getCodigos().get(info);
                                 String tipo = controlVar.consultarAsignatura(codeSearch,grupoSearch,semestreSearch).getTipos().get(info);
                                 System.out.println("Documento: "+codigo);
@@ -255,46 +293,43 @@ public class Main {
             }else if(opcion.equals("11")) { //Generar lista de asistencia
                 if(controlVar.getDepartamento().getAsignaturas().isEmpty()){
                     System.out.println("Aun no hay asignaturas registradas");
-                }else{
+                }else {
                     System.out.println("Ingrese la información de la asignatura de la que va a generar la lista de asistencia: ");
                     System.out.print("Código asignatura: ");
-                    String codigoAs = entrada.nextLine();
+                    String codigoAsign = entrada.nextLine();
                     System.out.print("Grupo: ");
-                    String grupoAs = entrada.nextLine();
+                    String grupoAsign = entrada.nextLine();
                     System.out.print("Semestre: ");
-                    String semestreAs = entrada.nextLine();
-                    if (controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs) == null) {
+                    String semestreAsign = entrada.nextLine();
+                    if (controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign) == null) {
                         System.out.println("La asignatura no existe");
                     } else {
-                        System.out.println("Asignatura: " + controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getNombre());
-                        System.out.println("Ingrese información de la asistencia: ");
-                        System.out.print("Fecha (aaaa/mm/dd): ");
-                        String fecha = entrada.nextLine();
-                        System.out.print("Hora de inicio (Formato 24H): ");
-                        String horaInicio = entrada.nextLine();
-                        System.out.print("Hora final (Formato 24H): ");
-                        String horaFinal = entrada.nextLine();
-                        if (controlVar.consultarAsistencia(codigoAs, grupoAs, semestreAs, fecha, horaInicio, horaFinal) != null) {
-                            System.out.println("La asistencia de esta asignatura en la fecha indicada ya se generó.");
+                        System.out.println("Asignatura: " + controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getNombre());
+                        if (controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).isEmpty()) {
+                            System.out.println("No hay estudiantes en esta asignatura aún");
                         } else {
-                            boolean hayestudiantes = false;
-                            ArrayList<String> codigos = new ArrayList<>();
-                            ArrayList<String> estados = new ArrayList<>();
-                            for (int stu = 0; stu < controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().size(); stu++) {
-                                if (controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().isEmpty()) {
-                                    System.out.println("No hay estudiantes en esta asignatura aún");
-                                } else {
-                                    hayestudiantes = true;
-                                    codigos.add(controlVar.consultarAsignatura(codigoAs, grupoAs, semestreAs).getEstudiantes().get(stu).getIdentificacion());
+                            System.out.println("Ingrese información de la asistencia: ");
+                            System.out.print("Fecha (aaaa/mm/dd): ");
+                            String fecha = entrada.nextLine();
+                            System.out.print("Hora de inicio (Formato 24H): ");
+                            String horaInicio = entrada.nextLine();
+                            System.out.print("Hora final (Formato 24H): ");
+                            String horaFinal = entrada.nextLine();
+                            if (controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal) != null) {
+                                System.out.println("La asistencia de esta asignatura en la fecha indicada ya se generó.");
+                            } else {
+                                ArrayList<String> codigos = new ArrayList<>();
+                                ArrayList<String> estados = new ArrayList<>();
+                                for (int stu = 0; stu < controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).size(); stu++) {
+                                    codigos.add(controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).get(stu).getIdentificacion());
                                     estados.add("No asistió");
                                 }
-                            }
-                            if (hayestudiantes) {
-                                controlVar.adicionarAsistencia(codigoAs, grupoAs, semestreAs, fecha, horaInicio, horaFinal, codigos, estados);
+                                controlVar.adicionarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal, codigos, estados);
                                 System.out.println("Lista de asistencia generada");
                             }
                         }
                     }
+                    System.out.println("Proceso finalizado");
                 }
             }else if(opcion.equals("12")){ //Llenar asistencia
                 if(controlVar.getDepartamento().getAsignaturas().isEmpty()){
@@ -302,12 +337,12 @@ public class Main {
                 }else {
                     System.out.println("Ingrese la información de la asignatura: ");
                     System.out.print("Código asignatura: ");
-                    String codigo = entrada.nextLine();
+                    String codigoAsign = entrada.nextLine();
                     System.out.print("Grupo asignatura: ");
-                    String grupo = entrada.nextLine();
+                    String grupoAsign = entrada.nextLine();
                     System.out.print("Semestre asignatura: ");
-                    String semestre = entrada.nextLine();
-                    if (controlVar.consultarAsignatura(codigo, grupo, semestre) == null) {
+                    String semestreAsign = entrada.nextLine();
+                    if (controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign) == null) {
                         System.out.println("La asignatura no existe o hay algún error en la digitación de sus datos");
                     } else {
                         System.out.print("Fecha asistencia: ");
@@ -316,15 +351,15 @@ public class Main {
                         String horaInicio = entrada.nextLine();
                         System.out.print("Hora final: ");
                         String horaFinal = entrada.nextLine();
-                        if (controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal) == null) {
+                        if (controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal) == null) {
                             System.out.println("No se pudo encontrar la asistencia.");
                         } else {
                             System.out.println("Asistencia encontrada:");
-                            System.out.println("Fecha: " + controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getFecha());
-                            System.out.println("Hora de inicio: " + controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getHora_de_inicio());
-                            System.out.println("Hora final: " + controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getHora_final());
-                            for (int asis = 0; asis < controlVar.consultarAsignatura(codigo, grupo, semestre).getEstudiantes().size(); asis++) {
-                                String nombreEst = controlVar.consultarAsignatura(codigo, grupo, semestre).getEstudiantes().get(asis).getNombre_Apellido();
+                            System.out.println("Fecha: " + controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getFecha());
+                            System.out.println("Hora de inicio: " + controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getHora_de_inicio());
+                            System.out.println("Hora final: " + controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getHora_final());
+                            for (int asis = 0; asis < controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).size(); asis++) {
+                                String nombreEst = controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).get(asis).getNombre_Apellido();
                                 String nuevoEstado;
                                 while (true) {
                                     System.out.println("Asistencia de " + nombreEst + " (0 = No asistió, 1 = Retraso, 2 = A tiempo):");
@@ -343,11 +378,11 @@ public class Main {
                                 } else if (nuevoEstado.equals("2")) {
                                     state = "Asistió a tiempo";
                                 }
-                                controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).modificarAsistencia(controlVar.consultarAsignatura(codigo, grupo, semestre).getEstudiantes().get(asis).getIdentificacion(), state);
+                                controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).modificarAsistencia(controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).get(asis).getIdentificacion(), state);
                             }
                             System.out.println("Asistencia registrada.");
                         }
-                        controlVar.modificarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal, controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getCodigos(), controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getEstados());
+                        controlVar.modificarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal, controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getCodigos(), controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getEstados());
                     }
                 }
             }else if(opcion.equals("13")){ //modificar asistencia de un estudiante
@@ -356,45 +391,45 @@ public class Main {
                 }else{
                     System.out.println("Ingrese la información de la asignatura: ");
                     System.out.println("Código de la asignatura: ");
-                    String codigo = entrada.nextLine();
+                    String codigoAsign = entrada.nextLine();
                     System.out.println("Grupo de la asignatura: ");
-                    String grupo = entrada.nextLine();
+                    String grupoAsign = entrada.nextLine();
                     System.out.println("Semestre de la asignatura: ");
-                    String semestre = entrada.nextLine();
-                    if(controlVar.consultarAsignatura(codigo,grupo,semestre) == null){
+                    String semestreAsign = entrada.nextLine();
+                    if(controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign) == null){
                         System.out.println("La asignatura no existe o hay algun error en la digitación de sus datos");
                     }else{
-                        String nombre = controlVar.consultarAsignatura(codigo,grupo,semestre).getNombre();
-                        System.out.println("Asignatura: "+nombre);
-                        if(controlVar.consultarAsignatura(codigo,grupo,semestre).getAsistencias().isEmpty()){
+                        String nombreAsign = controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getNombre();
+                        System.out.println("Asignatura: "+ nombreAsign);
+                        if(controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getAsistencias().isEmpty()){
                             System.out.println("Aun no se han registrado asistencias");
                         }else{
                             System.out.println("Digite la información de la asistencia: ");
                             System.out.println("Fecha (aaaa/mm/dd): ");
-                            String fecha = entrada.nextLine();
+                            String fechaAsist = entrada.nextLine();
                             System.out.println("Hora inicial (formato 24H): ");
                             String hora_inicio = entrada.nextLine();
                             System.out.println("Hora final (formato 24H): ");
                             String hora_final = entrada.nextLine();
-                            if(controlVar.consultarAsistencia(codigo,grupo,semestre,fecha,hora_inicio,hora_final) == null){
+                            if(controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist,hora_inicio,hora_final) == null){
                                 System.out.println("No se encontró la asistencia registrada");
                             }else{
                                 System.out.println("Asistencia encontrada");
-                                String date = controlVar.consultarAsistencia(codigo,grupo,semestre,fecha,hora_inicio,hora_final).getFecha();
+                                String date = controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist,hora_inicio,hora_final).getFecha();
                                 System.out.println("Fecha: "+date);
                                 System.out.println("Ingrese la información del estudiante que desea cambiar: ");
                                 System.out.println("Código: ");
-                                String doc = entrada.nextLine();
+                                String docEst = entrada.nextLine();
                                 System.out.println("Tipo de documento (CC ó TI): ");
-                                String tipodoc = entrada.nextLine().toUpperCase();
+                                String tipodocEst = entrada.nextLine().toUpperCase().substring(0,2);
                                 boolean isencontrado = false;
-                                for(int info = 0; info<controlVar.consultarAsignatura(codigo,grupo,semestre).getEstudiantes().size(); info++){
-                                    String id = controlVar.consultarAsistencia(codigo,grupo,semestre,fecha,hora_inicio,hora_final).getCodigos().get(info);
-                                    String type = controlVar.consultarAsignatura(codigo,grupo,semestre).getEstudiantes().get(info).getTipo_doc();
-                                    if(id.equalsIgnoreCase(doc) && type.equalsIgnoreCase(tipodoc)){
+                                for(int info = 0; info<controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).size(); info++){
+                                    String codOriginal = controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist,hora_inicio,hora_final).getCodigos().get(info);
+                                    String tipOriginal = controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getEstudiantes().get(info).getTipo_doc();
+                                    if(codOriginal.equalsIgnoreCase(docEst) && tipOriginal.equalsIgnoreCase(tipodocEst.substring(0,2))){
                                         System.out.println("Estudiante encontrado");
-                                        controlVar.consultarAsistencia(codigo,grupo,semestre,fecha,hora_inicio,hora_final).getEstados().set(info,"Retraso");
-                                        System.out.println("Asistencia de "+id+" cambiada a: Retraso");
+                                        controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist,hora_inicio,hora_final).getEstados().set(info,"Retraso");
+                                        System.out.println("Asistencia de "+codOriginal+" cambiada a: Retraso");
                                         isencontrado = true;
                                     }
                                 }
@@ -412,34 +447,33 @@ public class Main {
                 }else {
                     System.out.println("Ingrese la información de la asignatura: ");
                     System.out.print("Código asignatura: ");
-                    String codigo = entrada.nextLine();
+                    String codigoAsign = entrada.nextLine();
                     System.out.print("Grupo asignatura: ");
-                    String grupo = entrada.nextLine();
+                    String grupoAsign = entrada.nextLine();
                     System.out.print("Semestre asignatura: ");
-                    String semestre = entrada.nextLine();
-                    if (controlVar.consultarAsignatura(codigo, grupo, semestre) == null) {
+                    String semestreAsign = entrada.nextLine();
+                    if (controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign) == null) {
                         System.out.println("No se encontró la asignatura");
                     } else {
                         System.out.println("Asignatura encontrada");
                         System.out.println("Ingrese la información de la asistencia: ");
-                        System.out.print("Fecha: ");
-                        String fecha = entrada.nextLine();
-                        System.out.print("Hora de inicio: ");
-                        String horaInicio = entrada.nextLine();
-                        System.out.print("Hora final: ");
-                        String horaFinal = entrada.nextLine();
-                        if (controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal) == null) {
+                        System.out.print("Fecha (aaaa/mm/dd): ");
+                        String fechaAsist = entrada.nextLine();
+                        System.out.print("Hora de inicio (formato 24H): ");
+                        String hora_Inicio = entrada.nextLine();
+                        System.out.print("Hora final (formato 24H): ");
+                        String hora_Final = entrada.nextLine();
+                        if (controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist, hora_Inicio, hora_Final) == null) {
                             System.out.println("No se encontró la asistencia");
                         } else {
-                            System.out.println("\nAsignatura: " + controlVar.consultarAsignatura(codigo, grupo, semestre).getNombre());
-                            System.out.println("Fecha: " + controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getFecha());
+                            System.out.println("\nAsignatura: " + controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getNombre());
+                            System.out.println("Fecha: " + controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist, hora_Inicio, hora_Final).getFecha());
                             System.out.println("Listado de asistencia: \n");
-                            ArrayList<String> estadoAlumno = controlVar.consultarAsistencia(codigo, grupo, semestre, fecha, horaInicio, horaFinal).getEstados();
-                            for (int conAsis = 0; conAsis < controlVar.consultarAsignatura(codigo, grupo, semestre).getEstudiantes().size(); conAsis++) {
-                                String nombreAlumno = controlVar.consultarAsignatura(codigo, grupo, semestre).getEstudiantes().get(conAsis).getNombre_Apellido();
+                            for (int conAsis = 0; conAsis < controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).size(); conAsis++) {
+                                String nombreAlumno = controlVar.consultarAsignatura(codigoAsign, grupoAsign, semestreAsign).getEstudiantes().get(conAsis).getNombre_Apellido();
+                                String estadoAlumno = controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fechaAsist, hora_Inicio, hora_Final).getEstados().get(conAsis);
                                 System.out.println("Nombre: " + nombreAlumno);
-                                String estado = estadoAlumno.get(conAsis);
-                                System.out.println("Estado: " + estado + "\n");
+                                System.out.println("Estado: " + estadoAlumno + "\n");
                             }
                         }
                     }
