@@ -94,8 +94,8 @@ public class Asignatura {
         return true;
     }
     public boolean agregarTipos(String tipoEst){
-        String codigo = tipoEst;
-        codigos.add(tipoEst);
+        String tipo = tipoEst;
+        tipos.add(tipo);
         return true;
     }
     //CRUD de asistencias
