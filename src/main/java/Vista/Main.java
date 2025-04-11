@@ -370,18 +370,13 @@ public class Main {
                                         System.out.println("Por favor, ingrese uno de los siguientes valores: 0, 1 ó 2.");
                                     }
                                 }
-                                String state = "";
-                                if (nuevoEstado.equals("0")) {
-                                    state = "No asistió";
-                                } else if (nuevoEstado.equals("1")) {
-                                    state = "Retraso";
-                                } else if (nuevoEstado.equals("2")) {
-                                    state = "Asistió a tiempo";
-                                }
+                                String state = controlVar.obtenerEstadoAsistencia(nuevoEstado);
+
                                 controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).modificarAsistencia(controlVar.ConsultarEstudiantesAsign(codigoAsign,grupoAsign,semestreAsign).get(asis).getIdentificacion(), state);
                             }
                             System.out.println("Asistencia registrada.");
                         }
+                        //Se pasan dos arraylist a la asistencia, de codigos y de estados respectivamente
                         controlVar.modificarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal, controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getCodigos(), controlVar.consultarAsistencia(codigoAsign, grupoAsign, semestreAsign, fecha, horaInicio, horaFinal).getEstados());
                     }
                 }

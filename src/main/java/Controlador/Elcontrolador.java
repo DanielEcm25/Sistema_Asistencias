@@ -112,4 +112,16 @@ public class Elcontrolador {
         return false;
     }
     //DELETE (no tiene mucho sentido eliminar una asistencia)
+
+    //Método para vincular la asistencia del estudiante con una palabra
+    public String obtenerEstadoAsistencia(String estado){
+        while (true) {
+            switch(estado){
+                case "0": return "No asistió";
+                case "1": return "Retraso";
+                case "2": return "Asistió a tiempo";
+                default: System.out.println("Por favor, ingrese uno de los siguientes valores: 0, 1 ó 2.");
+            }
+        }
+    }
 }
